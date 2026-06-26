@@ -50,7 +50,20 @@
   <script>
     const analyzeButton = document.getElementById('analyze');
     const resultBox = document.getElementById('result');
+    const apiUrl = window.location.protocol === 'file:'
+      ? null
+      : `${window.location.origin}/analyze-ticket`;
+
+    if (!apiUrl) {
+      resultBox.textContent = 'Please open this page through the running server at http://127.0.0.1:8000/';
+    }
+
     analyzeButton.addEventListener('click', async () => {
+      if (!apiUrl) {
+        resultBox.textContent = 'Cannot call API from a file:// page. Start the server and open http://127.0.0.1:8000/';
+        return;
+      }
+
       const payload = {
         ticket_id: document.getElementById('ticket_id').value.trim(),
         complaint: document.getElementById('complaint').value.trim(),
@@ -58,7 +71,7 @@
       };
       resultBox.textContent = 'Analyzing...';
       try {
-        const res = await fetch('/analyze-ticket', {
+        const res = await fetch(apiUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)

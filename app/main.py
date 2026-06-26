@@ -1,3 +1,4 @@
+from pathlib import Path
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse, HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -5,8 +6,9 @@ from pydantic import BaseModel
 from typing import List, Optional
 from .analyzer import analyze_ticket
 
+BASE_DIR = Path(__file__).resolve().parent
 app = FastAPI(title="Ticket Investigator Service")
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 
 
 class Transaction(BaseModel):
@@ -36,7 +38,7 @@ async def health():
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
-    return FileResponse("app/static/index.html")
+    return FileResponse(BASE_DIR / "static" / "index.html")
 
 
 @app.post("/analyze-ticket")
