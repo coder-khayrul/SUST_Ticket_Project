@@ -3,34 +3,96 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ticket Investigator Demo</title>
+  <title>Ticket Investigator</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 24px; background: #f6f8fc; color: #1f2937; }
-    .container { max-width: 900px; margin: auto; background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08); }
-    h1 { margin-top: 0; }
-    label { display: block; margin: 16px 0 8px; font-weight: 600; }
-    textarea, input, button { width: 100%; font: inherit; }
-    textarea { min-height: 140px; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; resize: vertical; }
-    input { padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; }
-    button { margin-top: 20px; padding: 14px; border: none; border-radius: 10px; background: #2563eb; color: white; cursor: pointer; }
-    button:hover { background: #1d4ed8; }
-    pre { background: #f3f4f6; border-radius: 10px; padding: 16px; overflow-x: auto; }
-    .hint { color: #475569; font-size: 0.95rem; }
+    :root {
+      color-scheme: light;
+      font-family: Inter, Arial, sans-serif;
+      background: #eef2ff;
+      color: #0f172a;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 0; }
+    main { max-width: 1040px; margin: 0 auto; padding: 28px; }
+    .page { background: white; border-radius: 24px; padding: 32px; box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12); }
+    .header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; }
+    .header h1 { margin: 0; font-size: clamp(2rem, 2.4vw, 2.6rem); }
+    .intro { color: #475569; margin: 12px 0 24px; max-width: 720px; }
+    .grid { display: grid; gap: 24px; grid-template-columns: 1fr 1fr; }
+    .section { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 18px; padding: 22px; }
+    .section.full { grid-column: span 2; }
+    label { display: block; margin-bottom: 10px; font-weight: 700; }
+    .input, .textarea, .select { width: 100%; border-radius: 14px; border: 1px solid #cbd5e1; padding: 14px 16px; font-size: 0.98rem; }
+    .textarea { min-height: 130px; resize: vertical; font-family: inherit; }
+    .button-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+    button { border: none; border-radius: 14px; cursor: pointer; padding: 14px 20px; font-weight: 700; transition: transform 0.16s ease, background 0.16s ease; }
+    button:hover { transform: translateY(-1px); }
+    .primary { background: #4f46e5; color: white; }
+    .secondary { background: white; color: #334155; border: 1px solid #cbd5e1; }
+    .result-panel { padding: 0; background: #0f172a; color: white; min-height: 310px; }
+    .result-panel .section { border: none; background: transparent; padding: 0; }
+    pre { margin: 0; padding: 18px; overflow-x: auto; background: #020617; border-radius: 18px; font-size: 0.95rem; }
+    .row { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
+    .row .field { display: flex; flex-direction: column; }
+    .label-small { margin-bottom: 8px; color: #64748b; font-size: 0.88rem; }
+    .hint { margin-top: 8px; color: #64748b; font-size: 0.95rem; }
+    .status { margin-top: 16px; padding: 16px; border-radius: 16px; background: #e0e7ff; color: #1e3a8a; }
+    @media (max-width: 840px) { .grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Ticket Investigator</h1>
-    <p class="hint">Enter a complaint and optional transaction history, then click Analyze.</p>
+  <main>
+    <div class="page">
+      <div class="header">
+        <div>
+          <h1>Ticket Investigator</h1>
+          <p class="intro">A simple complaint investigation workspace. Fill the form, load sample data, and inspect the recommended support response.</p>
+        </div>
+      </div>
 
-    <label for="ticket_id">Ticket ID</label>
-    <input id="ticket_id" value="TKT-001" />
+      <div class="grid">
+        <section class="section">
+          <h2>Ticket Details</h2>
+          <div class="field">
+            <label class="label-small" for="ticket_id">Ticket ID</label>
+            <input id="ticket_id" class="input" value="TKT-001" />
+          </div>
+          <div class="field">
+            <label class="label-small" for="language">Language</label>
+            <select id="language" class="select">
+              <option value="en">English</option>
+              <option value="bn">Bangla</option>
+              <option value="mixed">Mixed</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label-small" for="channel">Channel</label>
+            <select id="channel" class="select">
+              <option value="in_app_chat">In-app chat</option>
+              <option value="call_center">Call center</option>
+              <option value="email">Email</option>
+              <option value="merchant_portal">Merchant portal</option>
+              <option value="field_agent">Field agent</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label-small" for="complaint">Complaint</label>
+            <textarea id="complaint" class="textarea">I sent 5000 taka to a wrong number (+8801719876543) around 2pm today.</textarea>
+          </div>
+          <div class="field">
+            <label class="label-small" for="campaign_context">Campaign Context</label>
+            <input id="campaign_context" class="input" placeholder="e.g. boishakh_bonanza_day_1" />
+          </div>
+          <div class="button-row">
+            <button class="primary" id="analyze">Analyze Ticket</button>
+            <button class="secondary" id="loadSample">Load Sample Data</button>
+          </div>
+          <p class="hint">The sample loader fills a full fake ticket with transaction history you can submit in one click.</p>
+        </section>
 
-    <label for="complaint">Complaint</label>
-    <textarea id="complaint">I sent 5000 taka to a wrong number (+8801719876543) around 2pm today.</textarea>
-
-    <label for="transaction_history">Transaction History (JSON)</label>
-    <textarea id="transaction_history">[
+        <section class="section">
+          <h2>Transaction History</h2>
+          <textarea id="transaction_history" class="textarea">[
   {
     "transaction_id": "TXN-9101",
     "timestamp": "2026-04-14T14:08:22Z",
@@ -40,46 +102,98 @@
     "status": "completed"
   }
 ]</textarea>
+          <p class="hint">Edit the JSON directly to test other transactions or add more entries.</p>
+        </section>
 
-    <button id="analyze">Analyze Ticket</button>
-
-    <h2>Response</h2>
-    <pre id="result">Waiting for analysis...</pre>
-  </div>
+        <section class="section full result-panel">
+          <h2>Investigation Result</h2>
+          <pre id="result">Ready to analyze the ticket. Click Analyze.</pre>
+        </section>
+      </div>
+    </div>
+  </main>
 
   <script>
-    const analyzeButton = document.getElementById('analyze');
+    const apiUrl = window.location.origin + '/analyze-ticket';
     const resultBox = document.getElementById('result');
-    const apiUrl = window.location.protocol === 'file:'
-      ? null
-      : `${window.location.origin}/analyze-ticket`;
+    const analyzeButton = document.getElementById('analyze');
+    const loadSampleButton = document.getElementById('loadSample');
 
-    if (!apiUrl) {
-      resultBox.textContent = 'Please open this page through the running server at http://127.0.0.1:8000/';
+    const sampleTicket = {
+      ticket_id: 'TKT-007',
+      complaint: 'I was charged twice for the same transfer. One payment is 1200 taka and it should not have happened.',
+      language: 'en',
+      channel: 'in_app_chat',
+      user_type: 'customer',
+      campaign_context: 'ramadan_offer',
+      transaction_history: [
+        {
+          transaction_id: 'TXN-3344',
+          timestamp: '2026-04-20T16:12:00Z',
+          type: 'transfer',
+          amount: 1200,
+          counterparty: '+8801710001234',
+          status: 'completed'
+        },
+        {
+          transaction_id: 'TXN-3345',
+          timestamp: '2026-04-20T16:12:05Z',
+          type: 'transfer',
+          amount: 1200,
+          counterparty: '+8801710001234',
+          status: 'completed'
+        }
+      ]
+    };
+
+    function updateTransactionText(json) {
+      document.getElementById('transaction_history').value = JSON.stringify(json.transaction_history, null, 2);
     }
 
-    analyzeButton.addEventListener('click', async () => {
-      if (!apiUrl) {
-        resultBox.textContent = 'Cannot call API from a file:// page. Start the server and open http://127.0.0.1:8000/';
-        return;
-      }
+    function fillForm(ticket) {
+      document.getElementById('ticket_id').value = ticket.ticket_id;
+      document.getElementById('complaint').value = ticket.complaint;
+      document.getElementById('language').value = ticket.language;
+      document.getElementById('channel').value = ticket.channel;
+      document.getElementById('campaign_context').value = ticket.campaign_context;
+      updateTransactionText(ticket);
+      resultBox.textContent = 'Sample data loaded. Click Analyze.';
+    }
 
+    loadSampleButton.addEventListener('click', () => fillForm(sampleTicket));
+
+    analyzeButton.addEventListener('click', async () => {
+      resultBox.textContent = 'Analyzing...';
       const payload = {
         ticket_id: document.getElementById('ticket_id').value.trim(),
         complaint: document.getElementById('complaint').value.trim(),
-        transaction_history: JSON.parse(document.getElementById('transaction_history').value || '[]')
+        language: document.getElementById('language').value,
+        channel: document.getElementById('channel').value,
+        campaign_context: document.getElementById('campaign_context').value.trim(),
+        transaction_history: []
       };
-      resultBox.textContent = 'Analyzing...';
+
+      try {
+        payload.transaction_history = JSON.parse(document.getElementById('transaction_history').value || '[]');
+      } catch (err) {
+        resultBox.textContent = 'Transaction history JSON is invalid. Please fix the syntax.';
+        return;
+      }
+
       try {
         const res = await fetch(apiUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
+        if (!res.ok) {
+          const error = await res.json().catch(() => ({ detail: res.statusText }));
+          throw new Error(error.detail || res.statusText);
+        }
         const body = await res.json();
         resultBox.textContent = JSON.stringify(body, null, 2);
       } catch (error) {
-        resultBox.textContent = 'Request failed: ' + error;
+        resultBox.textContent = 'Request failed: ' + error.message;
       }
     });
   </script>

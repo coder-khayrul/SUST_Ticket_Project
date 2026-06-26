@@ -19,7 +19,28 @@ Open: `http://127.0.0.1:8000/`
 
 ## Frontend usage
 
-The frontend is available at `/` and lets you enter a ticket complaint plus transaction history JSON and inspect the analyzer response immediately.
+The frontend is available at `/`. Use the form to enter ticket details, complaint text, and transaction history, then click **Analyze Ticket**.
+
+### Fake data to test
+
+Use the **Load Sample Data** button to prefill a mock dispute case. You can also test manually with this JSON in the transaction history field:
+
+```json
+[
+  {
+    "transaction_id": "TXN-9101",
+    "timestamp": "2026-04-14T14:08:22Z",
+    "type": "transfer",
+    "amount": 5000,
+    "counterparty": "+8801719876543",
+    "status": "completed"
+  }
+]
+```
+
+Try complaints such as:
+- `I sent 5000 taka to a wrong number (+8801719876543) around 2pm today.`
+- `I was charged twice for the same transfer. One payment is 1200 taka and it should not have happened.`
 
 ## Deploy on Render
 
